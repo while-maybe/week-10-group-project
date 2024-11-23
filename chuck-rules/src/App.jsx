@@ -13,12 +13,6 @@ function App() {
 
   // Handles search click to get status info
   const handleSearch = async () => {
-    // console.log(maxLength);
-
-    // if (!maxLength) {
-    //   setError("Please enter a Maximum Length.");
-    //   return;
-    // }
     setError(null); // Clear previous error
     try {
       const response = await axios.get(
