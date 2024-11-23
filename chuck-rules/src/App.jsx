@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 
 function App() {
-  const [maxLength, setMaxLength] = useState(10);
-  const [catFacts, setCatFacts] = useState([]);
+  // const [maxLength, setMaxLength] = useState(10);
+  const [chuckJoke, setChuckJoke] = useState([]);
   const [error, setError] = useState(null);
 
   // Handles input changes
@@ -13,23 +13,24 @@ function App() {
 
   // Handles search click to get status info
   const handleSearch = async () => {
-    console.log(maxLength);
+    // console.log(maxLength);
 
-    if (!maxLength) {
-      setError("Please enter a Maximum Length.");
-      return;
-    }
+    // if (!maxLength) {
+    //   setError("Please enter a Maximum Length.");
+    //   return;
+    // }
     setError(null); // Clear previous error
     try {
       const response = await axios.get(
-        `https://catfact.ninja/facts?limit=${maxLength}`
+        `https://api.chucknorris.io/jokes/random`
+        // `https://catfact.ninja/facts?limit=${maxLength}`
       );
 
       // destructure the data from the response
-      const { data } = response.data;
-      console.log(response.data);
+      const data = response.data.value;
+      console.log(data);
 
-      setCatFacts(data);
+      setChuckJoke(data);
     } catch (err) {
       setError("Could not retrieve information. Please check the status code.");
       setStatusInfo(null);
@@ -38,35 +39,22 @@ function App() {
 
   return (
     <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
-      <h1>Cat Facts</h1>
-      <input
-        type="number"
-        placeholder="Enter the number of cat facts you'd like"
-        value={maxLength}
-        onChange={handleChange}
-        style={{ padding: "8px", width: "100%" }}
-      />
+      <h1>Chuck jokes</h1>
       <button
         onClick={handleSearch}
         style={{ padding: "10px", marginTop: "10px", width: "100%" }}>
-        Search
+        Push the button
       </button>
 
       {/* TODO: Display error message if there is an error */}
       {error && <h2 style="{color: red}">An error occurred</h2>}
 
-      {/* TODO: Display facts if it exists */}
-      {catFacts ? (
+      {chuckJoke ? (
         <div style={{ marginTop: "20px" }}>
-          <h2>Here are {catFacts.length} Cat Facts</h2>
-          <ul>
-            {catFacts.map((fact, index) => (
-              <li key={index}>{fact.fact}</li>
-            ))}
-          </ul>
+          <h2>{chuckJoke}</h2>
         </div>
       ) : (
-        <h2>no facts to display</h2>
+        <h2>no joke to display :(</h2>
       )}
       {/* TODO: If there are no facts, display "no facts to display" */}
     </div>
