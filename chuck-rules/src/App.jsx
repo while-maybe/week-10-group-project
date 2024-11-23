@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from "react";
+import axios from "axios";
 
 function App() {
-  const [count, setCount] = useState(0)
+  // const [maxLength, setMaxLength] = useState(10);
+  const [chuckJoke, setChuckJoke] = useState([]);
+  const [error, setError] = useState(null);
+
+  // Handles input changes
+  const handleChange = (e) => {
+    setMaxLength(e.target.value);
+  };
+
+  // Handles search click to get status info
+  const handleSearch = async () => {
+    setError(null); // Clear previous error
+    try {
+      const response = await axios.get(
+        `https://api.chucknorris.io/jokes/random`
+        // `https://catfact.ninja/facts?limit=${maxLength}`
+      );
+
+      // destructure the data from the response
+      const data = response.data.value;
+      console.log(data);
+
+      setChuckJoke(data);
+    } catch (err) {
+      setError("Could not retrieve information. Please check the status code.");
+      setStatusInfo(null);
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
+      <h1>Chuck jokes</h1>
+      <button
+        onClick={handleSearch}
+        style={{ padding: "10px", marginTop: "10px", width: "100%" }}>
+        Push the button
+      </button>
+
+      {/* TODO: Display error message if there is an error */}
+      {error && <h2 style="{color: red}">An error occurred</h2>}
+
+      {chuckJoke ? (
+        <div style={{ marginTop: "20px" }}>
+          <h2>{chuckJoke}</h2>
+        </div>
+      ) : (
+        <h2>no joke to display :(</h2>
+      )}
+      {/* TODO: If there are no facts, display "no facts to display" */}
+    </div>
+  );
 }
 
-export default App
+export default App;
